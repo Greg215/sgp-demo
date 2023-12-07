@@ -52,7 +52,7 @@ jobs:
       - name: Run Flake8 (or other code checking tool)
         run: flake8 .
 
-  job_docker_scan:
+  docker_scan:
     runs-on: ubuntu-latest
     needs: yaml-formatting-check
     steps:
@@ -62,11 +62,11 @@ jobs:
       - name: Install Trivy
         run: |
           wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | \
-          sudo apt-key add -
-          echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main | \
-          sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-key add -
+          echo deb https://aquasecurity.github.io/trivy-repo/deb \
+            $(lsb_release -cs) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
           sudo apt-get update
-          sudo
+          sudo apt-get install trivy
 
       - name: Scan Dockerfile
         run: trivy --severity HIGH --exit-code 1 -f json ./path/to/Dockerfile

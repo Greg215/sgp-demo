@@ -3,9 +3,11 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/calculate', methods=['POST'])
 def calculate():
@@ -23,6 +25,7 @@ def calculate():
         result = num1 / num2
     else:
         result = 'Invalid operation'
+
 
     return render_template('index.html', result=result)
 

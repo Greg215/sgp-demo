@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'yaml', 'python' ] # Add other languages as needed
+        language: [ 'yaml', 'python' , "go"]
 
     steps:
       - name: Checkout Repository

@@ -6,8 +6,8 @@ on:
       - main  # Adjust the branch as needed
 
 env:
-  AWS_DEFAULT_REGION: eu-west-1
-  region: eu-west-1
+  AWS_REGION: eu-west-1
+  AWS_ACCOUNT_ID: 716641112337
 
 jobs:
   build-and-deploy:
@@ -22,7 +22,6 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
       with:
         registry-type: public
-        region: eu-west-1
 
     - name: Build, tag, and push docker image to Amazon ECR
       env:

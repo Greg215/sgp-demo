@@ -14,8 +14,6 @@ env:
   AWS_REGION: eu-west-1
   AWS_ACCOUNT_ID: 716641112337
   ECR_REPOSITORY: sgp-demo
-  ECS_CLUSTER: sgp-demo-greg
-  ECS_TASK_DEFINITION: task-definition.json
 
 jobs:
   codeql_analysis:
@@ -193,7 +191,7 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-  deploy_to_ecs:
+  deploy_to_ec2:
     runs-on: ubuntu-latest
     needs:
       - build-and-deploy
@@ -217,18 +215,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.ECS_CLUSTER }}
-          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.run_number }}
-          environment-variables: "LOG_LEVEL=INFO"
-
-      - name: Deploy to ECS Service
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          service: ${{ env.ECS_CLUSTER }}
+      - name: Deploy to EC2
+        env:
+          HOST: 46.51.162.88
+          IMAGE_TAG: ${{ github.run_number }}
+        run: |
+          echo "$SGP_SSH" > /tmp/id_rsa
+          chmod 600 /tmp/id_rsa
+          scp -i /tmp/id_rsa -o StrictHostKeyChecking=no \
+              -r $REGISTRY/$REPOSITORY:$IMAGE_TAG ubuntu@$HOST:/tmp
+          ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ubuntu@$HOST \
+            "docker load -i /tmp/$REPOSITORY:$IMAGE_TAG && \
+            docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG"

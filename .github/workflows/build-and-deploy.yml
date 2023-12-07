@@ -219,8 +219,9 @@ jobs:
         env:
           HOST: 46.51.162.88
           IMAGE_TAG: ${{ github.run_number }}
+          SSH_KEY: ${{ secrets.SGP_SSH }}
         run: |
-          echo "$SGP_SSH" > /tmp/id_rsa
+          echo "$SSH_KEY" > /tmp/id_rsa
           chmod 400 /tmp/id_rsa
           scp -i /tmp/id_rsa -o StrictHostKeyChecking=no \
               -r $REGISTRY/$REPOSITORY:$IMAGE_TAG ubuntu@$HOST:/tmp

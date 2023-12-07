@@ -238,8 +238,11 @@ jobs:
           script: |
             docker ps -a
             docker image ls
-            docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG
-            
+            docker pull ${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_REGION}}.amazonaws.com/${{env.ECR_REPOSITORY}}:$IMAGE_TAG
+            docker ps -a
+            docker image ls
+            # docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG
+
       # - name: Deploy to EC2 2
       #   env:
       #     HOST: 46.51.162.88

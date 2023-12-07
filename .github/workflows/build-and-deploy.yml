@@ -5,6 +5,10 @@ on:
     branches:
       - main  # Adjust the branch as needed
 
+env:
+  AWS_DEFAULT_REGION: eu-west-1
+  region: eu-west-1
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

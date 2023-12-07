@@ -3,7 +3,7 @@ name: Build and Deploy to ECR
 on:
   push:
     branches:
-      - main  # Adjust the branch as needed
+      - main
 
 env:
   AWS_REGION: eu-west-1

@@ -231,3 +231,4 @@ jobs:
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.ECS_CLUSTER }}

@@ -16,7 +16,7 @@ env:
   ECR_REPOSITORY: sgp-demo
   ECS_CLUSTER: sgp-demo-greg
   ECS_SERVICE: sgp-demo-greg
-  ECS_TASK_DEFINITION: sgp-demo-greg
+  ECS_TASK_DEFINITION: task-definition.json
 
 jobs:
   codeql_analysis:

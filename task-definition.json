@@ -1,0 +1,41 @@
+{
+    "family": "sgp-demo-greg",
+    "containerDefinitions": [
+      {
+        "name": "sgp-demo-greg",
+        "image": "${{ steps.login-ecr.outputs.registry }}/sgp-demo:${{ github.run_number }}",
+        "memory": 512,
+        "cpu": 256,
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 80,
+            "hostPort": 80
+          }
+        ],
+        "environment": [
+          {
+            "name": "AWS_REGION",
+            "value": "eu-west-1"
+          },
+          {
+            "name": "AWS_ACCOUNT_ID",
+            "value": "716641112337"
+          },
+          {
+            "name": "ECR_REPOSITORY",
+            "value": "sgp-demo"
+          },
+          {
+            "name": "ECS_CLUSTER",
+            "value": "sgp-demo-greg"
+          },
+          {
+            "name": "ECS_SERVICE",
+            "value": "sgp-demo-greg"
+          }
+        ]
+      }
+    ]
+  }
+  

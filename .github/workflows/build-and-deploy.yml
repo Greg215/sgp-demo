@@ -215,16 +215,16 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Deploy to EC2 1
-        env:
-          HOST: 46.51.162.88
-          IMAGE_TAG: ${{ github.run_number }}
-          SSH_KEY: ${{ secrets.SGP_SSH }}
-        run: |
-          echo "$SSH_KEY" > /tmp/id_rsa
-          chmod 400 /tmp/id_rsa
-          scp -i /tmp/id_rsa -o StrictHostKeyChecking=no \
-              -r $REGISTRY/$REPOSITORY:$IMAGE_TAG ubuntu@$HOST:/home/ubuntu/tmp
+      # - name: Deploy to EC2 1
+      #   env:
+      #     HOST: 46.51.162.88
+      #     IMAGE_TAG: ${{ github.run_number }}
+      #     SSH_KEY: ${{ secrets.SGP_SSH }}
+      #   run: |
+      #     echo "$SSH_KEY" > /tmp/id_rsa
+      #     chmod 400 /tmp/id_rsa
+      #     scp -i /tmp/id_rsa -o StrictHostKeyChecking=no \
+      #         -r $REGISTRY/$REPOSITORY:$IMAGE_TAG ubuntu@$HOST:/home/ubuntu/tmp
 
       - name: Deploy to EC2 2
         env:
@@ -233,5 +233,4 @@ jobs:
           SSH_KEY: ${{ secrets.SGP_SSH }}
         run: |
           ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ubuntu@$HOST \
-              "docker load -i /home/ubuntu/tmp/$REPOSITORY:$IMAGE_TAG && \
-               docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG"
+              "docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG"

@@ -237,6 +237,11 @@ jobs:
           script: |
             docker ps -a
             docker image ls
+            docker stop $(docker ps -aq)
+            docker rm $(docker ps -aq)
+            docker rmi $(docker images -aq)
+            docker ps -a
+            docker image ls
             aws ecr get-login-password --region ${{env.AWS_REGION}} | docker login --username AWS \
                 --password-stdin ${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_REGION}}.amazonaws.com
             docker pull \
@@ -245,4 +250,3 @@ jobs:
             docker image ls
             docker run -d -p 80:5000 \
               ${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_REGION}}.amazonaws.com/${{env.ECR_REPOSITORY}}:${{env.IMAGE_TAG}}
-

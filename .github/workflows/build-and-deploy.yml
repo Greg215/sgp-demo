@@ -17,7 +17,7 @@ env:
   ECS_CLUSTER: sgp-demo-greg
   ECS_SERVICE: sgp-demo-greg
   ECS_TASK_DEFINITION: sgp-demo-greg
-  
+
 jobs:
   codeql_analysis:
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript-typescript', 'python' , "ruby"]
+        language: [ 'javascript-typescript', 'python' ]
 
     steps:
       - name: Checkout Repository
@@ -202,7 +202,15 @@ jobs:
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION }}
+          container-name: ${{ env.ECS_SERVICE }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.run_number }}
+          environment-variable: "LOG_LEVEL=INFO"
 
-      - name: Deploy to EC2
-        run: |
-          aws ec2 run-instances --image-id ami-0d8f6eb4f641ef691 --count 1 --instance-type t2.micro --key-name sgp-demo --security-group-ids sg-0e3e3e0c6e3e3e0c6 --subnet-id subnet-0e3e3e0c6e3e3e0c6 --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=sgp-demo}]' --user-data file://userdata.txt
+      - name: Deploy to ECS Service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}

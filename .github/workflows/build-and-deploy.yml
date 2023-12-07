@@ -234,6 +234,7 @@ jobs:
           key: ${{ secrets.SGP_SSH }}
           port: 22
           IMAGE_TAG: ${{ github.run_number }}
+          REPOSITORY: sgp-demo
           script: |
             docker ps -a
             docker image ls

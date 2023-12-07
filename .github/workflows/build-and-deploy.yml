@@ -49,7 +49,7 @@ jobs:
 
   yaml-formatting-check:
     runs-on: ubuntu-latest
-    needs: 
+    needs:
       - python-code-check
       - json-check
     steps:

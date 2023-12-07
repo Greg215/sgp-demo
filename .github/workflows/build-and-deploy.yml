@@ -226,13 +226,26 @@ jobs:
       #     scp -i /tmp/id_rsa -o StrictHostKeyChecking=no \
       #         -r $REGISTRY/$REPOSITORY:$IMAGE_TAG ubuntu@$HOST:/home/ubuntu/tmp
 
-      - name: Deploy to EC2 2
-        env:
-          HOST: 46.51.162.88
+      - name: multiple command
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: 46.51.162.88
+          username: ubuntu
+          key: ${{ secrets.SGP_SSH }}
+          port: 22
           IMAGE_TAG: ${{ github.run_number }}
-          SSH_KEY: ${{ secrets.SGP_SSH }}
-        run: |
-          echo "$SSH_KEY" > /tmp/id_rsa
-          chmod 400 /tmp/id_rsa
-          ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ubuntu@$HOST \
-              "docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG"
+          script: |
+            docker ps -a
+            docker image ls
+            docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG
+            
+      # - name: Deploy to EC2 2
+      #   env:
+      #     HOST: 46.51.162.88
+      #     IMAGE_TAG: ${{ github.run_number }}
+      #     SSH_KEY: ${{ secrets.SGP_SSH }}
+      #   run: |
+      #     echo "$SSH_KEY" > /tmp/id_rsa
+      #     chmod 400 /tmp/id_rsa
+      #     ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no ubuntu@$HOST \
+      #         "docker run -d -p 80:5000 $REPOSITORY:$IMAGE_TAG"

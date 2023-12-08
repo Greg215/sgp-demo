@@ -7,7 +7,7 @@ on:
       - main
 
 permissions:
-  id-token: write   # This is required for requesting
+  id-token: write   # This is required for requesting a temporary AWS credential this is a very long string and it will fail the ci cd testing
   contents: read    # This is required for actions/checkout
 
 env:

@@ -10,7 +10,7 @@ permissions:
   id-token: write   # This is required for requesting a temporary AWS credential this is a very long string and it will fail the ci cd testing
   contents: read    # This is required for actions/checkout
 
-env:
+env: 
   AWS_REGION: eu-west-1
   AWS_ACCOUNT_ID: 716641112337
   ECR_REPOSITORY: sgp-demo
@@ -193,7 +193,7 @@ jobs:
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-  deploy_to_ec2:
+  deploy_to_ec2: 
     runs-on: ubuntu-latest
     needs:
       - build-and-deploy
@@ -204,7 +204,7 @@ jobs:
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
-        with:
+        with: 
           role-to-assume: arn:aws:iam::716641112337:role/cicd-sgp
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: eu-west-1
